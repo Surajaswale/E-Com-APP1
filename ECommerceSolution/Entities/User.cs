@@ -8,7 +8,7 @@ namespace ECommerceSolution.Entities
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100)]
+        [StringLength(100)] 
         public string FirstName { get; set; } = string.Empty;
 
         [Required]
