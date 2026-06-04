@@ -21,8 +21,6 @@
 
   <ItemGroup>
     <Folder Include="DTOs\Auth\" />
-    <Folder Include="DTOs\Category\" />
-    <Folder Include="DTOs\Product\" />
     <Folder Include="Mappings\" />
     <Folder Include="Configurations\" />
   </ItemGroup>
