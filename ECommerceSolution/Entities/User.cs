@@ -2,6 +2,7 @@
 
 namespace ECommerceSolution.Entities
 {
+    //This is user entity
     public class User
     {
         public int Id { get; set; }
