@@ -7,62 +7,119 @@ using ECommerceSolution.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using ECommerceSolution.Middleware;
+using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+
+
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.AddSecurityDefinition(
+        "Bearer",
+        new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Enter JWT Token"
+        });
+
+    options.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    }
+                },
+                Array.Empty<string>()
+            }
+        });
+});
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseSqlServer(
-        builder.Configuration
-        .GetConnectionString(
-            "DefaultConnection"));
+        builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-builder.Services.AddScoped<IUserRepository,
-    UserRepository>();
+builder.Services.AddScoped<ICartRepository, CartRepository>();
+builder.Services.AddScoped<ICartService, CartService>();
 
-builder.Services.AddScoped<IAuthService,
-    AuthService>();
+
+
+builder.Services.AddScoped<IProductRepository,
+    ProductRepository>();
+
+builder.Services.AddScoped<IProductService,
+    ProductService>();
+
+
+// Repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+
+
+// Services
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
 
 builder.Services.AddScoped<JwtHelper>();
 
+
 builder.Services
-.AddAuthentication(
-JwtBearerDefaults.AuthenticationScheme)
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters =
-        new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters =
+            new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
 
-            ValidIssuer =
-                builder.Configuration["Jwt:Issuer"],
+                ValidIssuer =
+                    builder.Configuration["Jwt:Issuer"],
 
-            ValidAudience =
-                builder.Configuration["Jwt:Audience"],
+                ValidAudience =
+                    builder.Configuration["Jwt:Audience"],
 
-            IssuerSigningKey =
-                new SymmetricSecurityKey(
-                    Encoding.UTF8.GetBytes(
-                        builder.Configuration["Jwt:Key"]!))
-        };
-});
+                IssuerSigningKey =
+                    new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(
+                            builder.Configuration["Jwt:Key"]!))
+            };
+    });
 
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+
+// Seed Admin User
+using (var scope = app.Services.CreateScope())
+{
+    var context =
+        scope.ServiceProvider
+        .GetRequiredService<AppDbContext>();
+
+    await DbSeeder.SeedAdminAsync(context);
+}
+
 
 if (app.Environment.IsDevelopment())
 {
@@ -71,12 +128,7 @@ if (app.Environment.IsDevelopment())
 }
 
 
-
-
-
 app.UseMiddleware<GlobalExceptionMiddleware>();
-
-app.UseHttpsRedirection();
 
 app.UseHttpsRedirection();
 
@@ -86,18 +138,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-
-
-using (var scope =
-       app.Services.CreateScope())
-{
-    var context =
-        scope.ServiceProvider
-        .GetRequiredService<AppDbContext>();
-
-    await DbSeeder
-        .SeedAdminAsync(context);
-}
-
 app.Run();
-
