@@ -2,6 +2,7 @@
 {
     public class ProductSearchDto
     {
+        //product dto comment
         public string? Keyword { get; set; }
 
         public string? Sort { get; set; }
