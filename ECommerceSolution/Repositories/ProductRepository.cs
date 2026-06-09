@@ -47,5 +47,53 @@ namespace ECommerceSolution.Repositories
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<Product>>
+            SearchProductsAsync(
+                string? keyword,
+                string? sort,
+                int page,
+                int pageSize)
+        {
+            var query = _context.Products
+                .Include(p => p.Category)
+                .AsQueryable();
+
+            // SEARCH
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                query = query.Where(p =>
+                    p.Name.Contains(keyword));
+            }
+
+            // SORT
+
+            query = sort?.ToLower() switch
+            {
+                "price_asc" =>
+                    query.OrderBy(p => p.Price),
+
+                "price_desc" =>
+                    query.OrderByDescending(p => p.Price),
+
+                "name_asc" =>
+                    query.OrderBy(p => p.Name),
+
+                "name_desc" =>
+                    query.OrderByDescending(p => p.Name),
+
+                _ =>
+                    query.OrderBy(p => p.Id)
+            };
+
+            // PAGINATION
+
+            query = query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize);
+
+            return await query.ToListAsync();
+        }
     }
 }

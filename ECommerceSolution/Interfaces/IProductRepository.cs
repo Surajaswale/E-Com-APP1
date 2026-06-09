@@ -1,4 +1,6 @@
-﻿namespace ECommerceSolution.Interfaces
+﻿using ECommerceSolution.Entities;
+
+namespace ECommerceSolution.Interfaces
 {
     public interface IProductRepository
     {
@@ -13,5 +15,12 @@
         void Delete(Product product);
 
         Task SaveChangesAsync();
+
+        Task<List<Product>>
+            SearchProductsAsync(
+                string? keyword,
+                string? sort,
+                int page,
+                int pageSize);
     }
 }

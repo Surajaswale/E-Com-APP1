@@ -20,5 +20,10 @@ namespace ECommerceSolution.Interfaces
 
         Task<bool>
             DeleteAsync(int id);
+
+        // Search + Sorting + Pagination
+        Task<List<ProductResponseDto>>
+            SearchProductsAsync(
+                ProductSearchDto dto);
     }
 }

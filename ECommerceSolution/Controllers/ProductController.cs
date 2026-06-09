@@ -89,7 +89,22 @@ namespace ECommerceSolution.Controllers
             }
 
             return Ok(
+            
+                
                 "Product deleted successfully.");
+        }
+
+        [HttpGet("search")]
+        public async Task<IActionResult>
+    SearchProducts(
+        [FromQuery]
+        ProductSearchDto dto)
+        {
+            var products =
+                await _service
+                .SearchProductsAsync(dto);
+
+            return Ok(products);
         }
     }
 }
