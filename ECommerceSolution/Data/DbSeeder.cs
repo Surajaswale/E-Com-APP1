@@ -1,5 +1,4 @@
-﻿using BCrypt.Net;
-using ECommerceSolution.Entities;
+﻿using ECommerceSolution.Entities;
 
 namespace ECommerceSolution.Data
 {
@@ -8,7 +7,8 @@ namespace ECommerceSolution.Data
         public static async Task SeedAdminAsync(
             AppDbContext context)
         {
-            if (!context.Users.Any())
+            if (!context.Users.Any(
+                u => u.Email == "admin@gmail.com"))
             {
                 var admin = new User
                 {
@@ -16,8 +16,7 @@ namespace ECommerceSolution.Data
                     LastName = "Admin",
                     Email = "admin@gmail.com",
                     PasswordHash =
-                        BCrypt.Net.BCrypt
-                        .HashPassword(
+                        BCrypt.Net.BCrypt.HashPassword(
                             "Admin@123"),
 
                     Role = "Admin"

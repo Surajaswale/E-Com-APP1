@@ -58,6 +58,14 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<ICartRepository, CartRepository>();
 builder.Services.AddScoped<ICartService, CartService>();
 
+builder.Services.AddScoped<
+    IPaymentRepository,
+    PaymentRepository>();
+
+builder.Services.AddScoped<
+    IPaymentService,
+    PaymentService>();
+
 
 
 builder.Services.AddScoped<IProductRepository,
@@ -71,10 +79,31 @@ builder.Services.AddScoped<IProductService,
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
+builder.Services.AddScoped<
+    IOrderRepository,
+    OrderRepository>();
+
+builder.Services.AddScoped<
+    IOrderService,
+    OrderService>();
+
+
+builder.Services.AddScoped<
+    IPaymentRepository,
+    PaymentRepository>();
+
+builder.Services.AddScoped<
+    IPaymentService,
+    PaymentService>();
 
 // Services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+
+builder.Services.AddScoped<
+    IDashboardService,
+    DashboardService>();
 
 
 builder.Services.AddScoped<JwtHelper>();
@@ -106,6 +135,9 @@ builder.Services
     });
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddScoped<IOrderRepository,
+    OrderRepository>();
 
 var app = builder.Build();
 

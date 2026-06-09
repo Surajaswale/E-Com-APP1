@@ -9,8 +9,8 @@ namespace ECommerceSolution.Services
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
-
         private readonly JwtHelper _jwtHelper;
+        
 
         public AuthService(
             IUserRepository userRepository,
@@ -18,6 +18,7 @@ namespace ECommerceSolution.Services
         {
             _userRepository = userRepository;
             _jwtHelper = jwtHelper;
+        
         }
 
         public async Task<AuthResponseDto> RegisterAsync(
@@ -50,6 +51,10 @@ namespace ECommerceSolution.Services
 
             await _userRepository
                 .SaveChangesAsync();
+
+            // =========================
+            // SEND WELCOME EMAIL
+            
 
             var token =
                 _jwtHelper.GenerateToken(user);
@@ -95,7 +100,7 @@ namespace ECommerceSolution.Services
                 Email = user.Email,
                 Role = user.Role,
                 FullName =
-         $"{user.FirstName} {user.LastName}"
+                    $"{user.FirstName} {user.LastName}"
             };
         }
     }

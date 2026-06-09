@@ -8,7 +8,7 @@ namespace ECommerceSolution.Entities
         public int Id { get; set; }
 
         [Required]
-        [StringLength(100)] 
+        [StringLength(100)]
         public string FirstName { get; set; } = string.Empty;
 
         [Required]
@@ -28,5 +28,24 @@ namespace ECommerceSolution.Entities
         public string Role { get; set; } = "Customer";
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<Order> Orders
+        {
+            get;
+            set;
+        }
+=
+new List<Order>();
+
+        public ICollection<Cart> Carts
+        {
+            get;
+            set;
+        }
+=
+new List<Cart>();
     }
+
+
+
 }
