@@ -21,6 +21,14 @@ public class Product
 
     public Category Category { get; set; }
 
+    public ICollection<Wishlist> Wishlists
+    {
+        get;
+        set;
+    }
+   =
+   new List<Wishlist>();
+
     public ICollection<CartItem> CartItems { get; set; }
         = new List<CartItem>();
 }

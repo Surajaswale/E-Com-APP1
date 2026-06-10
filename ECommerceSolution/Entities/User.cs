@@ -29,11 +29,21 @@ namespace ECommerceSolution.Entities
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        public ICollection<Wishlist> Wishlists
+        {
+            get;
+            set;
+        }
+ =
+ new List<Wishlist>();
+
         public ICollection<Order> Orders
         {
             get;
             set;
         }
+
+
 =
 new List<Order>();
 
