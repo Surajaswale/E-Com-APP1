@@ -108,6 +108,14 @@ builder.Services.AddScoped<
 
 builder.Services.AddScoped<JwtHelper>();
 
+builder.Services.AddScoped<
+    IWishlistRepository,
+    WishlistRepository>();
+
+builder.Services.AddScoped<
+    IWishlistService,
+    WishlistService>();
+
 
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
