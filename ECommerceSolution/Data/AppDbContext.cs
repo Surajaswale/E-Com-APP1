@@ -15,10 +15,23 @@ namespace ECommerceSolution.Data
         public DbSet<Category> Categories => Set<Category>();
         public DbSet<Product> Products => Set<Product>();
         public DbSet<Cart> Carts => Set<Cart>();
+        public DbSet<Address>
+    Addresses
+        {
+            get;
+            set;
+        }
         public DbSet<CartItem> CartItems => Set<CartItem>();
         public DbSet<Order> Orders => Set<Order>();
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
         public DbSet<Payment> Payments => Set<Payment>();
+
+        public DbSet<Review>
+    Reviews
+        {
+            get;
+            set;
+        }
 
         // Wishlist
         public DbSet<Wishlist> Wishlists => Set<Wishlist>();
@@ -104,6 +117,19 @@ namespace ECommerceSolution.Data
             modelBuilder.Entity<Payment>()
                 .Property(p => p.Amount)
                 .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Review>()
+    .HasOne(r => r.User)
+    .WithMany()
+    .HasForeignKey(r => r.UserId)
+    .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Review>()
+                .HasOne(r => r.Product)
+                .WithMany(p => p.Reviews)
+                .HasForeignKey(r => r.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
         }
     }
 }
